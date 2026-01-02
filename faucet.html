@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Sepolia Faucet</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="text/javascript"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f0f0f0; color: #333; }
+        h1 { color: #333; }
+        button { padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 8px; margin: 10px; }
+        button:disabled { background: #aaa; cursor: not-allowed; }
+        #status { margin-top: 20px; font-weight: bold; min-height: 50px; color: #d00; }
+        .info { margin: 20px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>🚰 Athena Sepolia ETH Faucet</h1>
+    <p>Get 0.1 Sepolia ETH every 24 hours – Free!</p>
+    
+    <button id="connectBtn">Connect Wallet</button>
+    <button id="requestBtn" disabled>Request 0.1 ETH</button>
+    
+    <div id="status"></div>
+    <div class="info">
+        <p>Contract: <code>0x625c58A939DA45871ac0C0f536051157bEFdb336</code> (replace with yours)</p>
+        <p>Works with MetaMask, Coinbase Wallet, Trust Wallet, etc.</p>
+    </div>
+
+    <script>
+        const contractAddress = "0x625c58A939DA45871ac0C0f536051157bEFdb336"; // <<<--- PUT YOUR REAL CONTRACT ADDRESS HERE!!!
+        const sepoliaChainId = "0xaa36a7"; // Sepolia
+
+        const abi = ["function request() external"];
+
+        let provider, signer, contract, account;
+
+        async function connectWallet() {
+            const statusEl = document.getElementById("status");
+
+            if (typeof window.ethereum === 'undefined' && typeof window.web3 === 'undefined') {
+                statusEl.innerText = "No wallet detected. Install MetaMask or another Web3 wallet.";
+                return;
+            }
+
+            try {
+                provider = new ethers.providers.Web3Provider(window.ethereum || window.web3.currentProvider);
+
+                await provider.send("eth_requestAccounts", []);
+
+                const network = await provider.getNetwork();
+                if (network.chainId !== parseInt(sepoliaChainId, 16)) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: sepoliaChainId }],
+                        });
+                        statusEl.innerText = "Switched to Sepolia! Connecting...";
+                    } catch (switchError) {
+                        statusEl.innerText = "Please switch to Sepolia network in your wallet.";
+                        return;
+                    }
+                }
+
+                signer = provider.getSigner();
+                account = await signer.getAddress();
+                contract = new ethers.Contract(contractAddress, abi, signer);
+
+                document.getElementById("connectBtn").innerText = `Connected: ${account.substr(0,6)}...${account.substr(-4)}`;
+                document.getElementById("connectBtn").disabled = true;
+                document.getElementById("requestBtn").disabled = false;
+                statusEl.innerText = "Connected! Click to request ETH.";
+                statusEl.style.color = "#0a0";
+            } catch (err) {
+                statusEl.innerText = "Connection failed: " + (err.message || "User rejected");
+            }
+        }
+
+        async function requestETH() {
+            const statusEl = document.getElementById("status");
+            document.getElementById("requestBtn").disabled = true;
+            statusEl.innerText = "Sending transaction...";
+
+            try {
+                const tx = await contract.request();
+                statusEl.innerText = "Waiting for confirmation...";
+                await tx.wait();
+                statusEl.innerText = "🎉 Success! 0.1 Sepolia ETH sent!";
+                statusEl.style.color = "#0a0";
+            } catch (err) {
+                let msg = "Error: ";
+                if (err.message.includes("Cooldown")) msg += "Wait 24 hours.";
+                else if (err.message.includes("insufficient")) msg += "Faucet empty – refill needed.";
+                else msg += err.message || "Failed";
+                statusEl.innerText = msg;
+            }
+            document.getElementById("requestBtn").disabled = false;
+        }
+
+        document.getElementById("connectBtn").onclick = connectWallet;
+        document.getElementById("requestBtn").onclick = requestETH;
+    </script>
+</body>
+</html>
