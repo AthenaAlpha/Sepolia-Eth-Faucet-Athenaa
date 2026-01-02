@@ -51,40 +51,49 @@
             box-shadow: 0 0 30px var(--gold-glow);
         }
 
-        /* Floating Voucher Images Layer */
+        /* Upgraded Floating Voucher Layer */
         .floating-images {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             pointer-events: none;
             z-index: 3;
-            opacity: 0.22; /* Slightly increased for better visibility */
+            opacity: 1; /* Full opacity for images, controlled in animation */
         }
         .floating-img {
             position: absolute;
-            width: 140px;
+            width: 280px; /* Doubled from 140px – much bigger! */
             height: auto;
-            animation: float 45s linear infinite;
-            filter: drop-shadow(0 0 30px var(--gold-glow)) brightness(1.3);
-            border-radius: 15px;
+            object-fit: contain;
+            animation: floatUp 50s linear infinite;
+            filter: drop-shadow(0 0 40px var(--gold-glow)) brightness(1.4) contrast(1.2);
+            border-radius: 20px;
+            transform: translateX(-50%); /* Center horizontally on left position */
         }
+        /* Varied sizes for more dynamic feel */
+        .floating-img:nth-child(3n) { width: 220px; }
+        .floating-img:nth-child(4n) { width: 320px; }
         .floating-img:nth-child(odd) {
-            animation-direction: reverse;
-            animation-duration: 55s;
-        }
-        .floating-img:nth-child(3n) {
-            animation-duration: 35s;
-            width: 110px;
-        }
-        .floating-img:nth-child(4n) {
             animation-duration: 60s;
-            width: 160px;
+            animation-direction: reverse;
         }
-        @keyframes float {
-            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.85; }
-            90% { opacity: 0.85; }
-            100% { transform: translateY(-200px) translateX(80px) rotate(360deg); opacity: 0; }
+        .floating-img:nth-child(5n) { animation-duration: 40s; }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -300px; /* Start below screen */
+                opacity: 0;
+                transform: translateX(-50%) rotate(0deg);
+            }
+            10% { opacity: 0.9; }
+            20% { opacity: 1; transform: translateX(-50%) rotate(10deg); }
+            80% { opacity: 1; transform: translateX(-50%) rotate(-10deg); }
+            90% { opacity: 0.9; }
+            100% {
+                bottom: 100vh;
+                opacity: 0;
+                transform: translateX(-50%) rotate(0deg);
+            }
         }
 
         .container {
@@ -197,6 +206,9 @@
         @media (max-width: 600px) {
             h1 { font-size: 3rem; }
             button { padding: 16px 35px; font-size: 1.3rem; }
+            .floating-img { width: 180px !important; }
+            .floating-img:nth-child(3n) { width: 150px !important; }
+            .floating-img:nth-child(4n) { width: 200px !important; }
         }
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap');
     </style>
@@ -205,28 +217,28 @@
     <div id="particles-js"></div>
     <canvas id="candles"></canvas>
 
-    <!-- Floating Voucher Images - Your 20 Images with Direct Links -->
+    <!-- BIGGER & BETTER Floating Pepe Call Vouchers -->
     <div class="floating-images">
-        <img src="https://i.ibb.co/8DYr9DTG/photo-2026-01-03-01-59-16.jpg" class="floating-img" style="left: 5%; animation-delay: 0s;">
-        <img src="https://i.ibb.co/jvnZ8R8V/photo-2026-01-03-02-03-17.jpg" class="floating-img" style="left: 12%; animation-delay: 3s;">
-        <img src="https://i.ibb.co/PZ3XV4jG/photo-2026-01-03-02-03-23.jpg" class="floating-img" style="left: 20%; animation-delay: 8s;">
-        <img src="https://i.ibb.co/5gFtbD4N/photo-2026-01-03-02-03-40.jpg" class="floating-img" style="left: 28%; animation-delay: 12s;">
-        <img src="https://i.ibb.co/35FCVYSr/photo-2026-01-03-02-03-47.jpg" class="floating-img" style="left: 35%; animation-delay: 1s;">
-        <img src="https://i.ibb.co/Xrm2CRgK/photo-2026-01-03-02-03-57.jpg" class="floating-img" style="left: 42%; animation-delay: 18s;">
-        <img src="https://i.ibb.co/whP8h1h6/photo-2026-01-03-02-04-01.jpg" class="floating-img" style="left: 50%; animation-delay: 6s;">
-        <img src="https://i.ibb.co/mrhX5JDf/photo-2026-01-03-02-04-07.jpg" class="floating-img" style="left: 58%; animation-delay: 22s;">
-        <img src="https://i.ibb.co/zTHKxX3f/photo-2026-01-03-02-04-14.jpg" class="floating-img" style="left: 65%; animation-delay: 10s;">
-        <img src="https://i.ibb.co/VYjDVG4S/photo-2026-01-03-02-04-34.jpg" class="floating-img" style="left: 72%; animation-delay: 25s;">
-        <img src="https://i.ibb.co/VYyg7mDH/photo-2026-01-03-02-04-48.jpg" class="floating-img" style="left: 78%; animation-delay: 4s;">
-        <img src="https://i.ibb.co/ksH4j6q1/photo-2026-01-03-02-04-59.jpg" class="floating-img" style="left: 85%; animation-delay: 30s;">
-        <img src="https://i.ibb.co/8DF2YWnV/photo-2026-01-03-02-05-06.jpg" class="floating-img" style="left: 8%; animation-delay: 15s;">
-        <img src="https://i.ibb.co/5hBLWsjV/photo-2026-01-03-02-05-28.jpg" class="floating-img" style="left: 18%; animation-delay: 20s;">
-        <img src="https://i.ibb.co/dxsZtrn/photo-2026-01-03-02-05-43.jpg" class="floating-img" style="left: 30%; animation-delay: 28s;">
-        <img src="https://i.ibb.co/qYYwjk7g/photo-2026-01-03-02-06-03.jpg" class="floating-img" style="left: 45%; animation-delay: 9s;">
-        <img src="https://i.ibb.co/pSHMy1c/photo-2026-01-03-02-06-12.jpg" class="floating-img" style="left: 55%; animation-delay: 33s;">
-        <img src="https://i.ibb.co/qbTTcZb/photo-2026-01-03-02-06-34.jpg" class="floating-img" style="left: 68%; animation-delay: 14s;">
-        <img src="https://i.ibb.co/rKvmNwLz/photo-2026-01-03-02-06-38.jpg" class="floating-img" style="left: 80%; animation-delay: 26s;">
-        <img src="https://i.ibb.co/6RD4JmgD/photo-2026-01-03-02-06-47.jpg" class="floating-img" style="left: 92%; animation-delay: 35s;">
+        <img src="https://i.ibb.co/8DYr9DTG/photo-2026-01-03-01-59-16.jpg" class="floating-img" style="left: 8%; animation-delay: 0s;">
+        <img src="https://i.ibb.co/jvnZ8R8V/photo-2026-01-03-02-03-17.jpg" class="floating-img" style="left: 18%; animation-delay: 5s;">
+        <img src="https://i.ibb.co/PZ3XV4jG/photo-2026-01-03-02-03-23.jpg" class="floating-img" style="left: 28%; animation-delay: 12s;">
+        <img src="https://i.ibb.co/5gFtbD4N/photo-2026-01-03-02-03-40.jpg" class="floating-img" style="left: 38%; animation-delay: 18s;">
+        <img src="https://i.ibb.co/35FCVYSr/photo-2026-01-03-02-03-47.jpg" class="floating-img" style="left: 48%; animation-delay: 2s;">
+        <img src="https://i.ibb.co/Xrm2CRgK/photo-2026-01-03-02-03-57.jpg" class="floating-img" style="left: 58%; animation-delay: 25s;">
+        <img src="https://i.ibb.co/whP8h1h6/photo-2026-01-03-02-04-01.jpg" class="floating-img" style="left: 68%; animation-delay: 8s;">
+        <img src="https://i.ibb.co/mrhX5JDf/photo-2026-01-03-02-04-07.jpg" class="floating-img" style="left: 78%; animation-delay: 30s;">
+        <img src="https://i.ibb.co/zTHKxX3f/photo-2026-01-03-02-04-14.jpg" class="floating-img" style="left: 88%; animation-delay: 15s;">
+        <img src="https://i.ibb.co/VYjDVG4S/photo-2026-01-03-02-04-34.jpg" class="floating-img" style="left: 12%; animation-delay: 22s;">
+        <img src="https://i.ibb.co/VYyg7mDH/photo-2026-01-03-02-04-48.jpg" class="floating-img" style="left: 25%; animation-delay: 35s;">
+        <img src="https://i.ibb.co/ksH4j6q1/photo-2026-01-03-02-04-59.jpg" class="floating-img" style="left: 40%; animation-delay: 10s;">
+        <img src="https://i.ibb.co/8DF2YWnV/photo-2026-01-03-02-05-06.jpg" class="floating-img" style="left: 55%; animation-delay: 28s;">
+        <img src="https://i.ibb.co/5hBLWsjV/photo-2026-01-03-02-05-28.jpg" class="floating-img" style="left: 70%; animation-delay: 4s;">
+        <img src="https://i.ibb.co/dxsZtrn/photo-2026-01-03-02-05-43.jpg" class="floating-img" style="left: 85%; animation-delay: 20s;">
+        <img src="https://i.ibb.co/qYYwjk7g/photo-2026-01-03-02-06-03.jpg" class="floating-img" style="left: 30%; animation-delay: 32s;">
+        <img src="https://i.ibb.co/pSHMy1c/photo-2026-01-03-02-06-12.jpg" class="floating-img" style="left: 50%; animation-delay: 14s;">
+        <img src="https://i.ibb.co/qbTTcZb/photo-2026-01-03-02-06-34.jpg" class="floating-img" style="left: 65%; animation-delay: 26s;">
+        <img src="https://i.ibb.co/rKvmNwLz/photo-2026-01-03-02-06-38.jpg" class="floating-img" style="left: 80%; animation-delay: 7s;">
+        <img src="https://i.ibb.co/6RD4JmgD/photo-2026-01-03-02-06-47.jpg" class="floating-img" style="left: 92%; animation-delay: 38s;">
     </div>
 
     <div id="cursor-trail"></div>
@@ -247,14 +259,14 @@
     </div>
 
     <script>
-        // Enhanced Cursor trail
+        // Cursor trail
         const trail = document.getElementById('cursor-trail');
         document.addEventListener('mousemove', e => {
             trail.style.left = e.clientX + 'px';
             trail.style.top = e.clientY + 'px';
         });
 
-        // particles.js blockchain-themed config
+        // particles.js
         particlesJS('particles-js', {
             particles: {
                 number: { value: 120, density: { enable: true, value_area: 800 } },
@@ -323,7 +335,7 @@
         }
         setInterval(drawCandles, 3000);
 
-        // Faucet logic
+        // Faucet logic (unchanged)
         const contractAddress = "0x625c58A939DA45871ac0C0f536051157bEFdb336";
         const sepoliaChainId = "0xaa36a7";
         const abi = ["function request() external"];
