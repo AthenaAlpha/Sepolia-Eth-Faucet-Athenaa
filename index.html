@@ -60,18 +60,6 @@
             box-shadow: 0 0 60px rgba(255,215,0,0.35), inset 0 0 20px rgba(255,215,0,0.15);
             max-width: 90vw;
         }
-        .logo-container {
-            position: relative;
-            display: inline-block;
-        }
-        .logo {
-            width: 280px;
-            filter: drop-shadow(0 0 35px var(--gold));
-            transition: transform 0.6s ease;
-        }
-        .logo-container:hover .logo {
-            transform: scale(1.08) rotate(3deg);
-        }
         h1 {
             font-size: 3.8rem;
             background: linear-gradient(90deg, var(--gold), #fff, var(--gold-glow), var(--gold));
@@ -134,14 +122,14 @@
             transform: none;
             box-shadow: none;
         }
+        /* CRITICAL FIX: Reduced blur radius + added will-change */
         #status {
             min-height: 80px;
             font-size: 1.35rem;
             margin-top: 30px;
-            text-shadow: 0 0 20px var(--gold);
+            text-shadow: 0 0 8px var(--gold); /* Reduced from 20px to 8px */
             white-space: pre-wrap;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+            will-change: contents; /* Helps GPU handle frequent updates better */
         }
         .scanline {
             position: absolute;
@@ -157,7 +145,6 @@
         }
         @media (max-width: 600px) {
             h1 { font-size: 2.8rem; }
-            .logo { width: 220px; }
             button { padding: 14px 30px; font-size: 1.2rem; }
         }
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&display=swap');
@@ -191,12 +178,11 @@
             trail.style.top = e.clientY + 'px';
         });
 
-        // Particles
+        // Particles (unchanged)
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         let particles = [];
         const mouse = { x: null, y: null };
         document.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
@@ -257,7 +243,7 @@
         initParticles();
         animateParticles();
 
-        // Simple candlesticks
+        // Candlesticks (unchanged)
         const candleCanvas = document.getElementById('candles');
         const cctx = candleCanvas.getContext('2d');
         candleCanvas.width = window.innerWidth;
@@ -294,30 +280,23 @@
         let provider, signer, contract, account;
         const statusEl = document.getElementById("status");
 
-        // Fixed typewriter effect – no more glitches
+        // FINAL WORKING TYPEWRITER - No more glitches
         function typeWriter(text, speed = 40) {
-            // Start with invisible status
-            statusEl.style.opacity = "0";
-            statusEl.style.textShadow = "none";  // Disable heavy shadow during typing
             statusEl.innerHTML = "";
-
             let i = 0;
             const interval = setInterval(() => {
                 if (i < text.length) {
-                    statusEl.innerHTML += text.charAt(i);
+                    statusEl.textContent += text.charAt(i);  // Use textContent instead of innerHTML
                     i++;
                 } else {
                     clearInterval(interval);
-                    // Restore full glow and fade in
-                    statusEl.style.textShadow = "0 0 20px var(--gold)";
-                    statusEl.style.opacity = "1";
                 }
             }, speed);
         }
 
         async function connectWallet() {
             if (!window.ethereum) {
-                typeWriter("No wallet detected. Install MetaMask or another Web3 wallet.", 30);
+                typeWriter("No wallet detected. Install MetaMask or another Web3 wallet.");
                 statusEl.style.color = "#ff5555";
                 return;
             }
@@ -337,29 +316,29 @@
                 document.getElementById("connectBtn").innerText = `CONNECTED: ${account.slice(0,6)}...${account.slice(-4)}`;
                 document.getElementById("connectBtn").disabled = true;
                 document.getElementById("requestBtn").disabled = false;
-                typeWriter("Wallet connected! Ready to claim.", 35);
+                typeWriter("Wallet connected! Ready to claim.");
                 statusEl.style.color = "#00ff88";
             } catch (err) {
-                typeWriter("Connection failed: " + (err.message || "Rejected"), 30);
+                typeWriter("Connection failed: " + (err.message || "Rejected"));
                 statusEl.style.color = "#ff5555";
             }
         }
 
         async function requestETH() {
             document.getElementById("requestBtn").disabled = true;
-            typeWriter("Claiming your ETH...", 40);
+            typeWriter("Claiming your ETH...");
             statusEl.style.color = "#ffff66";
             try {
                 const tx = await contract.request();
-                typeWriter("Transaction sent – waiting for confirmation...", 35);
+                typeWriter("Transaction sent – waiting for confirmation...");
                 await tx.wait();
-                typeWriter("🎉 SUCCESS! 0.1 Sepolia ETH claimed!", 35);
+                typeWriter("🎉 SUCCESS! 0.1 Sepolia ETH claimed!");
                 statusEl.style.color = "#00ff88";
             } catch (err) {
                 let msg = err.message.includes("Cooldown") ? "⏳ Too soon! Wait 24 hours." :
                           err.message.includes("insufficient") ? "😢 Faucet is empty – refill needed." :
                           "Error: " + (err.message || "Failed");
-                typeWriter(msg, 30);
+                typeWriter(msg);
                 statusEl.style.color = "#ff5555";
             }
             document.getElementById("requestBtn").disabled = false;
