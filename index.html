@@ -51,7 +51,7 @@
             box-shadow: 0 0 30px var(--gold-glow);
         }
 
-        /* Fixed & Improved Floating Voucher Layer */
+        /* Instant & Continuous Floating Vouchers */
         .floating-images {
             position: fixed;
             top: 0; left: 0;
@@ -68,18 +68,9 @@
             filter: drop-shadow(0 0 40px var(--gold-glow)) brightness(1.4) contrast(1.2);
             border-radius: 20px;
             transform: translateX(-50%);
-            /* Start off-screen at bottom with random delay already applied via inline style */
-            bottom: -400px;
-            opacity: 0;
         }
         .floating-img:nth-child(3n) { width: 220px; }
         .floating-img:nth-child(4n) { width: 320px; }
-
-        /* All images use the same animation, but different duration/direction via classes */
-        .float-normal { animation: floatUp 50s linear infinite; }
-        .float-slow { animation: floatUp 60s linear infinite; }
-        .float-fast { animation: floatUp 40s linear infinite; }
-        .float-reverse { animation: floatUp 55s linear infinite reverse; }
 
         @keyframes floatUp {
             0% {
@@ -87,16 +78,22 @@
                 opacity: 0;
                 transform: translateX(-50%) rotate(0deg);
             }
-            8% { opacity: 0.9; }
-            18% { opacity: 1; transform: translateX(-50%) rotate(12deg); }
-            82% { opacity: 1; transform: translateX(-50%) rotate(-12deg); }
-            92% { opacity: 0.9; }
+            5% { opacity: 0.9; }
+            15% { opacity: 1; transform: translateX(-50%) rotate(12deg); }
+            85% { opacity: 1; transform: translateX(-50%) rotate(-12deg); }
+            95% { opacity: 0.9; }
             100% {
-                bottom: 120vh; /* Go well above the viewport */
+                bottom: 120vh;
                 opacity: 0;
                 transform: translateX(-50%) rotate(0deg);
             }
         }
+
+        /* All images animate immediately with staggered but short delays (max 12s) */
+        .floating-img { animation: floatUp 45s linear infinite; }
+        .floating-img.slow { animation-duration: 55s; }
+        .floating-img.fast { animation-duration: 35s; }
+        .floating-img.reverse { animation: floatUp 50s linear infinite reverse; }
 
         .container {
             text-align: center;
@@ -219,28 +216,28 @@
     <div id="particles-js"></div>
     <canvas id="candles"></canvas>
 
-    <!-- FIXED: Staggered start positions so nothing is stuck at the top on page load -->
+    <!-- INSTANT ACTION: Vouchers start rising IMMEDIATELY on page load -->
     <div class="floating-images">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-07.jpg" class="floating-img float-normal" style="left: 8%; animation-delay: 0s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-01.jpg" class="floating-img float-slow" style="left: 18%; animation-delay: 8s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_01-59-16.jpg" class="floating-img float-fast" style="left: 28%; animation-delay: 15s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-47.jpg" class="floating-img float-reverse" style="left: 38%; animation-delay: 4s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-40.jpg" class="floating-img float-normal" style="left: 48%; animation-delay: 22s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-12.jpg" class="floating-img float-slow" style="left: 58%; animation-delay: 12s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-28.jpg" class="floating-img float-fast" style="left: 68%; animation-delay: 28s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-23.jpg" class="floating-img float-reverse" style="left: 78%; animation-delay: 6s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-59.jpg" class="floating-img float-normal" style="left: 88%; animation-delay: 18s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-14.jpg" class="floating-img float-slow" style="left: 12%; animation-delay: 35s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-47.jpg" class="floating-img float-fast" style="left: 25%; animation-delay: 10s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-48.jpg" class="floating-img float-reverse" style="left: 40%; animation-delay: 25s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-38.jpg" class="floating-img float-normal" style="left: 55%; animation-delay: 2s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-03.jpg" class="floating-img float-slow" style="left: 70%; animation-delay: 30s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-06.jpg" class="floating-img float-fast" style="left: 85%; animation-delay: 14s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-34.jpg" class="floating-img float-reverse" style="left: 30%; animation-delay: 20s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-43.jpg" class="floating-img float-normal" style="left: 50%; animation-delay: 32s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-34.jpg" class="floating-img float-slow" style="left: 65%; animation-delay: 9s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-17.jpg" class="floating-img float-fast" style="left: 80%; animation-delay: 26s;">
-        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-57.jpg" class="floating-img float-reverse" style="left: 92%; animation-delay: 38s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-07.jpg" class="floating-img" style="left: 8%; animation-delay: 0s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-01.jpg" class="floating-img slow" style="left: 18%; animation-delay: 2s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_01-59-16.jpg" class="floating-img fast" style="left: 28%; animation-delay: 4s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-47.jpg" class="floating-img reverse" style="left: 38%; animation-delay: 0s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-40.jpg" class="floating-img" style="left: 48%; animation-delay: 6s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-12.jpg" class="floating-img slow" style="left: 58%; animation-delay: 1s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-28.jpg" class="floating-img fast" style="left: 68%; animation-delay: 8s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-23.jpg" class="floating-img" style="left: 78%; animation-delay: 3s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-59.jpg" class="floating-img reverse" style="left: 88%; animation-delay: 5s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-14.jpg" class="floating-img slow" style="left: 12%; animation-delay: 10s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-47.jpg" class="floating-img" style="left: 25%; animation-delay: 0s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-48.jpg" class="floating-img fast" style="left: 40%; animation-delay: 7s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-38.jpg" class="floating-img reverse" style="left: 55%; animation-delay: 2s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-03.jpg" class="floating-img" style="left: 70%; animation-delay: 9s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-06.jpg" class="floating-img slow" style="left: 85%; animation-delay: 4s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-04-34.jpg" class="floating-img fast" style="left: 30%; animation-delay: 11s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-05-43.jpg" class="floating-img" style="left: 50%; animation-delay: 1s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-06-34.jpg" class="floating-img reverse" style="left: 65%; animation-delay: 6s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-17.jpg" class="floating-img slow" style="left: 80%; animation-delay: 3s;">
+        <img src="https://ik.imagekit.io/sgd5jpfxkn/photo_2026-01-03_02-03-57.jpg" class="floating-img fast" style="left: 92%; animation-delay: 12s;">
     </div>
 
     <div id="cursor-trail"></div>
