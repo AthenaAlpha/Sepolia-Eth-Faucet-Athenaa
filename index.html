@@ -11,6 +11,7 @@
             --gold: #ffd700;
             --gold-glow: #ffaa00;
             --text: #ffffff;
+            --accent: #6b00ff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -23,58 +24,92 @@
             align-items: center;
             justify-content: center;
             cursor: none;
+            background: linear-gradient(45deg, #0f001a, #1a0033, #0f001a);
+            background-size: 300% 300%;
+            animation: gradientShift 18s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         #cursor-trail {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+            width: 24px;
+            height: 24px;
+            background: radial-gradient(circle, var(--gold) 10%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             mix-blend-mode: screen;
-            opacity: 0.8;
+            opacity: 0.7;
             transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
         }
         canvas#particles { position: fixed; top: 0; left: 0; z-index: 1; }
-        canvas#candles { position: fixed; top: 0; left: 0; z-index: 2; opacity: 0.3; }
+        canvas#candles { position: fixed; top: 0; left: 0; z-index: 2; opacity: 0.25; }
         .container {
             text-align: center;
             z-index: 10;
             position: relative;
-            padding: 40px;
-            border: 2px solid transparent;
+            padding: 40px 30px;
+            border: 2px solid rgba(255,215,0,0.3);
             border-radius: 20px;
-            background: rgba(15, 0, 26, 0.6);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+            background: rgba(15, 0, 26, 0.65);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 60px rgba(255,215,0,0.35), inset 0 0 20px rgba(255,215,0,0.15);
+            max-width: 90vw;
+        }
+        .logo-container {
+            position: relative;
+            display: inline-block;
         }
         .logo {
-            width: 300px;
-            filter: drop-shadow(0 0 30px var(--gold));
-            animation: float 6s ease-in-out infinite;
+            width: 280px;
+            filter: drop-shadow(0 0 35px var(--gold));
+            transition: transform 0.6s ease;
+        }
+        .logo-container:hover .logo {
+            transform: scale(1.08) rotate(3deg);
         }
         h1 {
-            font-size: 4rem;
-            background: linear-gradient(45deg, var(--gold), #fff, var(--gold-glow));
+            font-size: 3.8rem;
+            background: linear-gradient(90deg, var(--gold), #fff, var(--gold-glow), var(--gold));
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: titleShine 4s linear infinite;
             text-shadow: 0 0 40px var(--gold-glow);
-            margin: 20px 0;
+            margin: 20px 0 8px;
+        }
+        @keyframes titleShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
         p {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin: 20px 0;
             opacity: 0.9;
         }
+        a.gold-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: bold;
+            text-shadow: 0 0 15px var(--gold-glow);
+            transition: all 0.3s;
+        }
+        a.gold-link:hover {
+            text-shadow: 0 0 25px var(--gold), 0 0 40px var(--gold-glow);
+            transform: scale(1.05);
+        }
         button {
             padding: 18px 40px;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             margin: 15px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.4s ease;
             font-weight: bold;
             position: relative;
             overflow: hidden;
@@ -90,25 +125,40 @@
             box-shadow: 0 0 30px var(--gold-glow);
         }
         button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 0 60px var(--gold);
+            transform: translateY(-4px) scale(1.06);
+            box-shadow: 0 0 70px var(--gold);
         }
         button:disabled {
-            opacity: 0.5;
+            opacity: 0.45;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
         #status {
-            min-height: 60px;
-            font-size: 1.3rem;
+            min-height: 80px;
+            font-size: 1.35rem;
             margin-top: 30px;
             text-shadow: 0 0 20px var(--gold);
+            white-space: pre-wrap;
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        .scanline {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            background: linear-gradient(transparent, rgba(255,255,255,0.03) 50%, transparent);
+            animation: scan 8s linear infinite;
+            opacity: 0.4;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            .logo { width: 220px; }
+            button { padding: 14px 30px; font-size: 1.2rem; }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&display=swap');
     </style>
 </head>
 <body>
@@ -117,10 +167,18 @@
     <canvas id="candles"></canvas>
 
     <div class="container">
-        <img src="https://via.placeholder.com/300x300/0f001a/ffd700?text=ATHENA+ALPHA+LOGO" alt="Athena Alpha Logo" class="logo">
-        <!-- REPLACE ABOVE SRC WITH YOUR ACTUAL LOGO URL IF HOSTED -->
+        <div class="scanline"></div>
+        <div class="logo-container">
+            <img src="https://github.com/Adithiyha8/Sepolia-Eth-Faucet-Athena/raw/main/athena-logo.png" 
+                 alt="Athena Alpha Logo" class="logo">
+            <!-- ↑ replace with your actual logo filename if different -->
+        </div>
         <h1>ATHENA ALPHA</h1>
-        <p>Get 0.1 Sepolia ETH every 24 hours – Powered by the Gods</p>
+        <p>Get 0.1 Sepolia ETH every 24 hours – Powered by 
+            <a href="https://t.me/Athena_Alpha_bot" target="_blank" class="gold-link">
+                Athena Alpha
+            </a>
+        </p>
         
         <button id="connectBtn">CONNECT WALLET</button>
         <button id="requestBtn" disabled>CLAIM 0.1 ETH</button>
@@ -129,14 +187,14 @@
     </div>
 
     <script>
-        // === CUSTOM GOLD CURSOR TRAIL ===
+        // Cursor trail
         const trail = document.getElementById('cursor-trail');
         document.addEventListener('mousemove', e => {
             trail.style.left = e.clientX + 'px';
             trail.style.top = e.clientY + 'px';
         });
 
-        // === GOLDEN PARTICLE BACKGROUND ===
+        // Particles
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -151,27 +209,26 @@
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.speedY = Math.random() * 0.8 - 0.4;
             }
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-                if (this.size > 0.2) this.size -= 0.01;
-
+                if (this.size > 0.2) this.size -= 0.008;
                 if (mouse.x && mouse.y) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx*dx + dy*dy);
-                    if (distance < 200) {
-                        this.speedX += dx / 100;
-                        this.speedY += dy / 100;
+                    let dist = Math.hypot(dx, dy);
+                    if (dist < 180) {
+                        this.speedX += dx / 120;
+                        this.speedY += dy / 120;
                     }
                 }
             }
             draw() {
                 ctx.fillStyle = '#ffd700';
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = 18;
                 ctx.shadowColor = '#ffaa00';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -181,7 +238,7 @@
 
         function initParticles() {
             particles = [];
-            for (let i = 0; i < 150; i++) particles.push(new Particle());
+            for (let i = 0; i < 140; i++) particles.push(new Particle());
         }
 
         function animateParticles() {
@@ -191,7 +248,7 @@
                 p.draw();
                 if (p.size <= 0.2) particles.splice(i, 1);
             });
-            if (Math.random() < 0.1) particles.push(new Particle());
+            if (Math.random() < 0.12) particles.push(new Particle());
             requestAnimationFrame(animateParticles);
         }
 
@@ -200,100 +257,84 @@
             canvas.height = window.innerHeight;
             initParticles();
         });
-
         initParticles();
         animateParticles();
 
-        // === SUBTLE FLOATING CANDLESTICKS ===
+        // Simple candlesticks (unchanged)
         const candleCanvas = document.getElementById('candles');
         const cctx = candleCanvas.getContext('2d');
         candleCanvas.width = window.innerWidth;
         candleCanvas.height = window.innerHeight;
-
         let candles = [];
-        class Candle {
-            constructor() {
-                this.x = Math.random() * candleCanvas.width;
-                this.y = Math.random() * candleCanvas.height;
-                this.height = Math.random() * 60 + 20;
-                this.width = 10;
-                this.color = Math.random() > 0.5 ? '#00ff00' : '#ff0000';
-                this.alpha = 0.1 + Math.random() * 0.2;
-            }
-            draw() {
-                cctx.fillStyle = this.color;
-                cctx.globalAlpha = this.alpha;
-                cctx.fillRect(this.x - this.width/2, this.y - this.height, this.width, this.height);
-                cctx.fillRect(this.x - 1, this.y - this.height - 10, 2, this.height + 20);
-            }
-        }
+        class Candle { constructor() { this.x = Math.random()*candleCanvas.width; this.y = Math.random()*candleCanvas.height; this.height = Math.random()*50+20; this.width = 8; this.color = Math.random()>0.5?'#00ff88':'#ff3366'; this.alpha = 0.08+Math.random()*0.15; } draw() { cctx.fillStyle=this.color; cctx.globalAlpha=this.alpha; cctx.fillRect(this.x-this.width/2, this.y-this.height, this.width, this.height); cctx.fillRect(this.x-1, this.y-this.height-8, 2, this.height+16); } }
+        for (let i = 0; i < 18; i++) candles.push(new Candle());
+        function drawCandles() { cctx.clearRect(0,0,candleCanvas.width,candleCanvas.height); candles.forEach(c=>c.draw()); }
+        setInterval(drawCandles, 4000);
 
-        for (let i = 0; i < 20; i++) candles.push(new Candle());
-
-        function drawCandles() {
-            cctx.clearRect(0, 0, candleCanvas.width, candleCanvas.height);
-            candles.forEach(c => c.draw());
-        }
-        setInterval(drawCandles, 3000);
-
-        // === FAUCET LOGIC (SAME AS BEFORE BUT CLEANER) ===
-        const contractAddress = "0x625c58A939DA45871ac0C0f536051157bEFdb336"; // <<<<< REPLACE THIS!!!
+        // Faucet logic
+        const contractAddress = "0x625c58A939DA45871ac0C0f536051157bEFdb336"; // ← REPLACE THIS
         const sepoliaChainId = "0xaa36a7";
         const abi = ["function request() external"];
 
         let provider, signer, contract, account;
         const statusEl = document.getElementById("status");
 
+        // Typewriter effect for status
+        function typeWriter(text, speed = 40) {
+            statusEl.innerHTML = "";
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < text.length) {
+                    statusEl.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, speed);
+        }
+
         async function connectWallet() {
             if (!window.ethereum) {
-                statusEl.innerHTML = "No wallet detected.<br>Install MetaMask or another Web3 wallet.";
+                typeWriter("No wallet detected. Install MetaMask or another Web3 wallet.", 30);
                 statusEl.style.color = "#ff5555";
                 return;
             }
-
             try {
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 await provider.send("eth_requestAccounts", []);
-
                 const network = await provider.getNetwork();
                 if (network.chainId !== parseInt(sepoliaChainId, 16)) {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: sepoliaChainId }],
-                    });
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: sepoliaChainId }] });
                 }
-
                 signer = provider.getSigner();
                 account = await signer.getAddress();
                 contract = new ethers.Contract(contractAddress, abi, signer);
-
                 document.getElementById("connectBtn").innerText = `CONNECTED: ${account.slice(0,6)}...${account.slice(-4)}`;
                 document.getElementById("connectBtn").disabled = true;
                 document.getElementById("requestBtn").disabled = false;
-                statusEl.innerHTML = "Ready to claim your Sepolia ETH!";
-                statusEl.style.color = "#00ff00";
+                typeWriter("Wallet connected! Ready to claim.", 35);
+                statusEl.style.color = "#00ff88";
             } catch (err) {
-                statusEl.innerHTML = "Connection failed: " + (err.message || "Rejected");
+                typeWriter("Connection failed: " + (err.message || "Rejected"), 30);
                 statusEl.style.color = "#ff5555";
             }
         }
 
         async function requestETH() {
             document.getElementById("requestBtn").disabled = true;
-            statusEl.innerHTML = "Claiming...";
-            statusEl.style.color = "#ffff00";
-
+            typeWriter("Claiming your ETH...", 40);
+            statusEl.style.color = "#ffff66";
             try {
                 const tx = await contract.request();
-                statusEl.innerHTML = "Confirming transaction...";
+                typeWriter("Transaction sent – waiting for confirmation...", 35);
                 await tx.wait();
-                statusEl.innerHTML = "🎉 SUCCESS! 0.1 Sepolia ETH claimed!";
-                statusEl.style.color = "#00ff00";
+                typeWriter("🎉 SUCCESS! 0.1 Sepolia ETH claimed!", 35);
+                statusEl.style.color = "#00ff88";
             } catch (err) {
                 let msg = err.message.includes("Cooldown") ? "⏳ Too soon! Wait 24 hours." :
-                          err.message.includes("insufficient") ? "😢 Faucet empty – tell Athena to refill!" :
+                          err.message.includes("insufficient") ? "😢 Faucet is empty – refill needed." :
                           "Error: " + (err.message || "Failed");
-                statusEl.innerHTML = msg;
+                typeWriter(msg, 30);
                 statusEl.style.color = "#ff5555";
             }
             document.getElementById("requestBtn").disabled = false;
